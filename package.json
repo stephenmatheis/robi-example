@@ -1,26 +1,73 @@
 {
-  "name": "robi",
-  "version": "1.0.1",
-  "description": "Starter app for SharePoint 2013 on premise.",
-  "keywords": ["SharePoint"],
+  "name": "robi-example",
+  "version": "0.1.1",
+  "description": "Example app made with Robi - https://github.com/robijs/robi",
+  "keywords": [
+    "SharePoint",
+    "JavScript",
+    "framework",
+    "client-side"
+  ],
   "author": "Stephen Matheis",
   "license": "ISC",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stephenmatheis/robi"
+    "url": "https://github.com/stephenmatheis/robi-example"
   },
   "type": "module",
+  "watch": {
+    "build": {
+      "patterns": [
+        "./src/Robi/Actions",
+        "./src/Robi/Components",
+        "./src/Robi/Core",
+        "./src/Robi/Models"
+      ],
+      "quiet": true,
+      "silent": true
+    },
+    "build-dev": {
+      "patterns": [
+        "./src/Robi/Actions",
+        "./src/Robi/Components",
+        "./src/Robi/Core",
+        "./src/Robi/Models"
+      ],
+      "quiet": true,
+      "silent": true
+    }
+  },
   "scripts": {
-    "start": "concurrently \"npx json-server --watch ./json-server/db.json --id Id\" \"npx live-server --watch=./src --open=./dev/app.html --quiet\"",
+    "start": "concurrently \"npx json-server --watch ./json-server/db.json --id Id\" \"node ./servers/live-server.cjs --cors --watch=./src --ignore=./src/Lists,./src/app.js --open=./dev/app.html --quiet\" \"node ./servers/post.js\" \"npm run build-dev\"",
+    "prod": "concurrently \"npx json-server --watch ./json-server/db.json --id Id\" \"node ./servers/live-server.cjs --cors --watch=./src --ignore=./src/Lists,./src/app.js,./src/Robi/Actions,./src/Robi/Components,./src/Robi/Core,./src/Robi/Models --open=./dev/app.html --quiet\" \"node ./servers/post.js\" \"npm run watch-robi\"",
     "reset": "node ./scripts/reset.js",
-    "depgraph": "depcruise --exclude \"^node_modules\" --output-type dot src | dot -T svg > dependencygraph.svg",
-    "build": "webpack --config=./webpack.config.js"
+    "build": "node ./scripts/build.js",
+    "build-dev": "node ./scripts/build-dev.js",
+    "build-sp": "node ./scripts/build-sp.js",
+    "mkc": "node ./scripts/create-component.js",
+    "create-route": "node ./scripts/create-route.js",
+    "watch-robi": "npm-watch build",
+    "watch-robi-dev": "npm-watch build-dev",
+    "rm-sp": "node ./scripts/rm-dist.js"
   },
   "devDependencies": {
+    "chokidar": "^3.5.2",
+    "colors": "^1.4.0",
     "concurrently": "^6.2.1",
+    "connect": "^3.7.0",
+    "cors": "^2.8.5",
+    "event-stream": "^4.0.1",
+    "faye-websocket": "^0.11.4",
+    "fs-extra": "^10.0.0",
+    "http-auth": "^4.1.9",
     "json-server": "^0.16.3",
-    "live-server": "^1.2.1",
-    "webpack-cli": "^4.8.0"
+    "morgan": "^1.10.0",
+    "npm-watch": "^0.11.0",
+    "object-assign": "^4.1.1",
+    "open": "^8.4.0",
+    "proxy-middleware": "^0.15.0",
+    "send": "^0.17.2",
+    "serve-index": "^1.9.1"
   }
 }
